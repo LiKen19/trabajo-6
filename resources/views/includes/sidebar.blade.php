@@ -1,7 +1,7 @@
 <!-- resources/views/includes/sidebar.blade.php -->
 <aside class="d-flex flex-column flex-shrink-0 p-3 text-white"
     style="width: 250px; min-height: 100vh;
-           background: linear-gradient(180deg, #153052 76%, #B84A2F 100%);">
+        background: linear-gradient(180deg, #153052 76%, #B84A2F 100%);">
 
     <!-- Logo centrado -->
     <a href="#" class="d-flex justify-content-center align-items-center mb-4 text-decoration-none sidebar-logo">
@@ -38,7 +38,7 @@
         <form action="{{ route('logout') }}" method="POST" class="m-0">
             @csrf
             <button type="submit" class="btn btn-danger w-100 d-flex align-items-center justify-content-center gap-2">
-                🔒 Cerrar sesión
+                Cerrar sesión
             </button>
         </form>
     </div>
@@ -77,7 +77,7 @@
     .sidebar-link {
         border-radius: .375rem;
         font-weight: 600;
-        font-size: 1.1rem;
+        font-size: 1.6rem;
         position: relative;
         padding-left: 1rem;
         transition: background 0.3s;
