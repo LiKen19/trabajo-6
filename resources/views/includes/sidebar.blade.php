@@ -16,7 +16,7 @@
                 ['url' => '/cliente', 'icon' => '👥', 'text' => 'Clientes'],
                 ['url' => '/libro', 'icon' => '📚', 'text' => 'Libros'],
                 ['url' => '/prestamo', 'icon' => '📄', 'text' => 'Préstamos'],
-                ['url' => '#', 'icon' => '🧑‍💻', 'text' => 'Usuarios'],
+                ['url' => '/user', 'icon' => '🧑‍💻', 'text' => 'Usuarios'],
             ];
         @endphp
 

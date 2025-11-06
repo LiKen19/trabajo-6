@@ -11,6 +11,8 @@
         .sidebar a.active, .sidebar a:hover { background-color: #0b5ed7; color: white; }
         main { flex-grow: 1; padding: 1rem; }
     </style>
+    <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/png">
+
 </head>
 <body>
 <div class="d-flex">

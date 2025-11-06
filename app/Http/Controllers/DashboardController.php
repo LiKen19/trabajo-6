@@ -12,25 +12,24 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Estadísticas principales
         $total_clientes = Cliente::count();
         $total_libros_disponibles = Libro::where('estado', 'Disponible')->count();
         $total_prestamos_activos = Prestamo::where('estado', 'Prestado')->count();
-
-        // Datos para modales y listado
-        $clientes = Cliente::all();
+        $total_libros = Libro::count();
+        
+        // Variables para los modales
         $categorias = Categoria::all();
-        $libros_disponibles = Libro::where('estado', 'Disponible')->get();
-        $prestamos = Prestamo::with('cliente', 'libro')->get();
+        $clientes = Cliente::all();
+        $libros_disponibles = Libro::where('estado', 'Disponible')->get(); // 👈 USAR SOLO ESTA
 
         return view('dashboard', compact(
             'total_clientes',
             'total_libros_disponibles',
             'total_prestamos_activos',
-            'clientes',
+            'total_libros',
             'categorias',
-            'libros_disponibles',
-            'prestamos'
+            'clientes',
+            'libros_disponibles'  // 👈 UNA SOLA VARIABLE
         ));
     }
 }

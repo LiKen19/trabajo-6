@@ -5,8 +5,10 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\LibroController;
 use App\Http\Controllers\PrestamoController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController; // 👈 AGREGAR
 use App\Http\Controllers\AuthController; // 👈 te faltaba este
 use Illuminate\Support\Facades\Auth;
+
 
 // 👇 Página principal redirige al login
 Route::get('/', fn() => redirect('/login'));
@@ -36,4 +38,5 @@ Route::middleware('auth')->group(function () {
     Route::resource('cliente', ClienteController::class);
     Route::resource('libro', LibroController::class);
     Route::resource('prestamo', PrestamoController::class);
+    Route::resource('user', UserController::class);
 });

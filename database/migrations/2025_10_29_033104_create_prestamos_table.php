@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('prestamos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('cliente_id')->constrained('clients')->onDelete('cascade');
+            $table->foreignId('cliente_id')->constrained('clientes')->onDelete('cascade');
             $table->foreignId('libro_id')->constrained('libros')->onDelete('cascade');
             $table->date('fecha_prestamo');
             $table->date('fecha_devolucion')->nullable();
