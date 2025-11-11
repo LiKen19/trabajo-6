@@ -15,6 +15,10 @@
                     <div class="mb-3">
                         <label>Categoría</label>
                         <select name="categoria_id" class="form-control" required>
+                            
+                            <!-- LÍNEA CORREGIDA (Problema 3) -->
+                            <option value="" selected disabled>Seleccionar</option>
+                            
                             @foreach ($categorias as $categoria)
                                 <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
                             @endforeach
