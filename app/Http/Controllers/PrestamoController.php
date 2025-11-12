@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 
 class PrestamoController extends Controller
 {
+    /**
+     * Muestra todos los préstamos junto con los clientes y libros relacionados.
+     */
     public function index()
     {
         $prestamos = Prestamo::with(['cliente', 'libro'])->get();
@@ -18,65 +21,79 @@ class PrestamoController extends Controller
         return view('prestamo.index', compact('prestamos', 'clientes', 'libros'));
     }
 
+    /**
+     * Registra un nuevo préstamo en el sistema.
+     */
     public function store(Request $request)
     {
         $request->validate([
-            'cliente_id' => 'required|exists:clientes,id',
-            'libro_id' => 'required|exists:libros,id',
+            'cliente_id' => 'required|integer|exists:clientes,id',
+            'libro_id' => 'required|integer|exists:libros,id',
             'fecha_prestamo' => 'required|date',
-            'fecha_devolucion' => 'nullable|date',
+            'fecha_devolucion' => 'nullable|date|after_or_equal:fecha_prestamo',
             'estado' => 'required|in:Prestado,Devuelto',
         ]);
 
-        $prestamo = Prestamo::create($request->all());
+        $prestamo = Prestamo::create($request->only([
+            'cliente_id', 'libro_id', 'fecha_prestamo', 'fecha_devolucion', 'estado'
+        ]));
 
         // Actualizar estado del libro
         $libro = Libro::find($prestamo->libro_id);
         if ($libro) {
-            $libro->estado = ($prestamo->estado === 'Prestado') ? 'Prestado' : 'Disponible';
-            $libro->save();
+            $this->actualizarEstadoLibro($libro, $prestamo->estado);
         }
 
         return redirect()->route('prestamo.index')->with('success', 'Préstamo registrado correctamente.');
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Actualiza un préstamo existente.
+     */
+    public function update(Request $request, Prestamo $prestamo)
     {
-        $prestamo = Prestamo::findOrFail($id);
-
         $request->validate([
-            'cliente_id' => 'required|exists:clientes,id',
-            'libro_id' => 'required|exists:libros,id',
+            'cliente_id' => 'required|integer|exists:clientes,id',
+            'libro_id' => 'required|integer|exists:libros,id',
             'fecha_prestamo' => 'required|date',
-            'fecha_devolucion' => 'nullable|date',
+            'fecha_devolucion' => 'nullable|date|after_or_equal:fecha_prestamo',
             'estado' => 'required|in:Prestado,Devuelto',
         ]);
 
-        $prestamo->update($request->all());
+        $prestamo->update($request->only([
+            'cliente_id', 'libro_id', 'fecha_prestamo', 'fecha_devolucion', 'estado'
+        ]));
 
         // Actualizar estado del libro
         $libro = Libro::find($prestamo->libro_id);
         if ($libro) {
-            $libro->estado = ($prestamo->estado === 'Prestado') ? 'Prestado' : 'Disponible';
-            $libro->save();
+            $this->actualizarEstadoLibro($libro, $prestamo->estado);
         }
 
         return redirect()->route('prestamo.index')->with('success', 'Préstamo actualizado correctamente.');
     }
 
-    public function destroy($id)
+    /**
+     * Elimina un préstamo y libera el libro asociado.
+     */
+    public function destroy(Prestamo $prestamo)
     {
-        $prestamo = Prestamo::findOrFail($id);
-
-        // Liberar libro si existe
         $libro = Libro::find($prestamo->libro_id);
         if ($libro) {
-            $libro->estado = 'Disponible';
-            $libro->save();
+            $this->actualizarEstadoLibro($libro, 'Disponible');
         }
 
         $prestamo->delete();
 
         return redirect()->route('prestamo.index')->with('success', 'Préstamo eliminado y libro disponible.');
+    }
+
+    /**
+     * Cambia el estado de un libro según el préstamo.
+     */
+    private function actualizarEstadoLibro(Libro $libro, string $estado)
+    {
+        $libro->estado = ($estado === 'Prestado') ? 'Prestado' : 'Disponible';
+        $libro->save();
     }
 }
