@@ -15,13 +15,24 @@
 
 </head>
 <body>
-<div class="d-flex">
+    <!-- Botón para abrir/cerrar menú en móvil -->
+<nav class="navbar bg-primary text-white d-md-none">
+  <div class="container-fluid">
+    <button class="btn btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
+      ☰ Menú
+    </button>
+  </div>
+</nav>
+
+<div class="d-flex flex-column flex-md-row">
 
     <!-- Sidebar -->
-    @include('includes.sidebar')
+    <div class="collapse d-md-block sidebar" id="sidebarMenu">
+        @include('includes.sidebar')
+    </div>
 
     <!-- Contenido principal -->
-    <main>
+    <main class="flex-grow-1 p-3 p-md-4">
         @yield('content')
     </main>
 </div>
