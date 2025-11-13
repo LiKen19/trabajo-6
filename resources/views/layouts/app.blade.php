@@ -1,31 +1,23 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Mi App')</title>
+    <title>@yield('title', 'Biblioteca')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .sidebar { width: 250px; min-height: 100vh; background-color: #153052; }
-        .sidebar a { color: white; border-radius: .375rem; }
-        .sidebar a.active, .sidebar a:hover { background-color: #0b5ed7; color: white; }
-        main { flex-grow: 1; padding: 1rem; }
-    </style>
-    <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/png">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
 <body>
-<div class="d-flex">
+    <div class="d-flex">
+        <!-- Sidebar -->
+        @include('includes.sidebar')
 
-    <!-- Sidebar -->
-    @include('includes.sidebar')
+        <!-- Contenido Principal -->
+        <main class="flex-grow-1 main-content" style="min-height: 100vh; background-color: #f8f9fa;">
+            @yield('content')
+        </main>
+    </div>
 
-    <!-- Contenido principal -->
-    <main>
-        @yield('content')
-    </main>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
