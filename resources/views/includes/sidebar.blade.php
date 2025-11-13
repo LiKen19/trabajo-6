@@ -7,10 +7,11 @@
     <i class="bi bi-list fs-3"></i>
 </button>
 
-<!-- Sidebar Desktop (oculto en móvil) -->
-<aside class="d-none d-md-flex flex-column flex-shrink-0 p-3 text-white"
-    style="width: 250px; min-height: 100vh;
-        background: linear-gradient(180deg, #153052 76%, #B84A2F 100%);">
+<!-- Sidebar Desktop (oculto en móvil) - AHORA CON POSICIÓN FIJA -->
+<aside class="sidebar-desktop d-none d-md-flex flex-column flex-shrink-0 p-3 text-white position-fixed"
+    style="width: 250px; height: 100vh; top: 0; left: 0;
+        background: linear-gradient(180deg, #153052 76%, #B84A2F 100%);
+        overflow-y: auto;">
 
     <!-- Logo centrado -->
     <a href="#" class="d-flex justify-content-center align-items-center mb-4 text-decoration-none sidebar-logo">
@@ -103,12 +104,34 @@
         </div>
     </div>
 </div>
+
 <!-- Bootstrap Icons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 <!-- Estilos -->
 <style>
-    /* Sidebar Desktop */
+    /* Sidebar Desktop - POSICIÓN FIJA */
+    .sidebar-desktop {
+        z-index: 1000;
+    }
+
+    .sidebar-desktop::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .sidebar-desktop::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar-desktop::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 3px;
+    }
+
+    .sidebar-desktop::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.5);
+    }
+
     .sidebar-link {
         border-radius: .375rem;
         font-weight: 600;
@@ -162,6 +185,13 @@
     @media (max-width: 767.98px) {
         .main-content {
             padding-top: 60px !important;
+        }
+    }
+
+    /* Ajuste para el contenido principal en desktop */
+    @media (min-width: 768px) {
+        .main-content {
+            margin-left: 250px !important;
         }
     }
 
