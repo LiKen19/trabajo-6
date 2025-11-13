@@ -15,8 +15,13 @@ class Libro extends Model
         'idioma',
         'autor',
         'editorial',
-        'estado', // 👈 debe estar aquí
+        'estado',
     ];
+    protected $hidden = ['categoria'];
+
+
+    // 👇 Esto añadirá el campo "nombre_categoria" en el JSON automáticamente
+    protected $appends = ['nombre_categoria'];
 
     public function categoria()
     {
@@ -26,5 +31,11 @@ class Libro extends Model
     public function prestamos()
     {
         return $this->hasMany(Prestamo::class);
+    }
+
+    // 👇 Este accesor devuelve solo el nombre de la categoría
+    public function getNombreCategoriaAttribute()
+    {
+        return $this->categoria ? $this->categoria->nombre : null;
     }
 }

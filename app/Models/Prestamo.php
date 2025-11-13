@@ -9,6 +9,9 @@ class Prestamo extends Model
 {
     use HasFactory;
 
+    protected $table = 'prestamos';
+
+
     protected $fillable = [
         'cliente_id',
         'libro_id',

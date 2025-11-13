@@ -9,9 +9,9 @@ class Categoria extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre'];
+    protected $fillable = ['nombre', 'descripcion']; // 👈 incluye descripcion
 
-    // Una categoría tiene muchos libros
+    // Relación: una categoría tiene muchos libros
     public function libros()
     {
         return $this->hasMany(Libro::class);
