@@ -11,32 +11,37 @@
             background: url('/img/fondo.jpg') no-repeat center center fixed;
             background-size: cover;
             font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .login-card {
-            max-width: 900px;
+            display: flex;
+            flex-direction: row;
+            max-width: 950px;
             width: 100%;
-            background: linear-gradient(180deg, #0d274a 56%, #A7AAA6 100%);
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(180deg, #153052 60%, #A7AAA6 100%);
         }
 
-        .login-left {            
+        /* --- LADO IZQUIERDO --- */
+        .login-left {
             color: white;
-            padding: 3rem 2rem;
-        }
-
-        .login-right {
-            padding: 3rem 2rem;
+            padding: 3rem 2.5rem;
+            flex: 1;
             display: flex;
+            flex-direction: column;
             justify-content: center;
-            align-items: center;
         }
 
-        .login-right img {
-            max-width: 80%;
-            height: auto;
+        .login-left h2 {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
         }
 
         .form-control {
@@ -77,12 +82,14 @@
             margin-left: .5em;
         }
 
+        /* --- BOTONES SOCIALES --- */
         .btn-google,
         .btn-github {
             border-radius: 10px;
             font-weight: 500;
             background-color: #f8f9fa;
             border: 1px solid #ddd;
+            padding: 0.6rem;
         }
 
         .btn-google img,
@@ -91,22 +98,82 @@
             margin-right: 10px;
         }
 
-        /* 🌐 Responsivo */
+        /* --- LADO DERECHO --- */
+        .login-right {
+            flex: 1;
+            padding: 3rem 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff10;
+        }
+
+        .login-right img {
+            max-width: 85%;
+            height: auto;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+        }
+
+        /* --- RESPONSIVO --- */
+        @media (max-width: 992px) {
+            .login-left {
+                padding: 2.5rem 2rem;
+            }
+        }
+
         @media (max-width: 768px) {
+            body {
+                background-attachment: scroll;
+            }
+
+            .vh-100 {
+                height: auto !important;
+                min-height: 100vh;
+                padding: 2rem 0;
+            }
+
             .login-card {
                 flex-direction: column;
                 max-width: 90%;
             }
-            .login-left {
+
+            .login-left, .login-right {
+                width: 100%;
                 padding: 2rem 1.5rem;
+            }
+
+            .login-left {
                 border-radius: 20px 20px 0 0;
             }
+
             .login-right {
-                padding: 2rem 1rem;
                 border-radius: 0 0 20px 20px;
+                background: rgba(255, 255, 255, 0.1);
             }
+
             .login-right img {
                 max-width: 60%;
+            }
+
+            .login-left h2 {
+                font-size: 1.8rem;
+                margin-top: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-left {
+                padding: 1.8rem 1rem;
+            }
+
+            .btn-google,
+            .btn-github {
+                font-size: 0.9rem;
+                padding: 0.5rem;
+            }
+
+            .login-right img {
+                max-width: 70%;
             }
         }
     </style>
@@ -114,21 +181,19 @@
 <body>
 
 <div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="login-card d-flex flex-column flex-md-row shadow-lg">
+    <div class="login-card shadow-lg">
 
         <!-- LADO IZQUIERDO -->
-        <div class="login-left col-md-6 d-flex flex-column justify-content-center">
-            <h2 class="fw-bold mb-4 text-center">Iniciar Sesión</h2>
+        <div class="login-left">
+            <h2 class="fw-bold">Iniciar Sesión</h2>
 
-            <!-- Mostrar errores -->
             @if ($errors->any())
-                <div class="alert alert-danger py-2">
+                <div class="alert alert-danger py-2 mt-2">
                     {{ $errors->first() }}
                 </div>
             @endif
 
-            <!-- Formulario de login manual -->
-            <form method="POST" action="{{ route('login') }}">
+            <form method="POST" action="{{ route('login') }}" class="mt-3">
                 @csrf
                 <div class="mb-3">
                     <label for="email" class="form-label">Correo</label>
@@ -147,7 +212,6 @@
 
             <div class="divider text-white">o</div>
 
-            <!-- Botones sociales -->
             <a href="{{ url('/auth/google') }}" class="btn btn-google d-flex align-items-center justify-content-center mb-2">
                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google">
                 Continuar con Google
@@ -160,9 +224,10 @@
         </div>
 
         <!-- LADO DERECHO -->
-        <div class="login-right col-md-6">
+        <div class="login-right">
             <img src="/img/logo.png" alt="Logo TECSELIMA">
         </div>
+
     </div>
 </div>
 
