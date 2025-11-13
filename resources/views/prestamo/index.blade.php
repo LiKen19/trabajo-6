@@ -3,25 +3,25 @@
 @section('title', 'Préstamos')
 
 @section('content')
-<div class="container-fluid px-4 py-4">
+<div class="container-fluid px-3 px-md-4 py-4">
     <!-- Header con botón -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
         <h2 class="fw-bold mb-0">Préstamos</h2>
-        <button class="btn btn-secondary px-4" data-bs-toggle="modal" data-bs-target="#createModal" style="background: #A674C9">
+        <button class="btn btn-secondary px-3 py-2" data-bs-toggle="modal" data-bs-target="#createModal" style="background: #A674C9">
             <i class="bi bi-plus-circle me-2"></i>Agregar préstamo
         </button>
     </div>
 
     <!-- Tarjeta de búsqueda -->
     <div class="card shadow-sm mb-4 border-0" style="background: linear-gradient(135deg, #f8e8e8 0%, #f3d4d4 100%); border-radius: 20px;">
-        <div class="card-body d-flex align-items-center justify-content-between flex-wrap p-3">
-            <div class="flex-grow-1 pe-3" style="max-width: 600px;">
+        <div class="card-body d-flex flex-column flex-md-row align-items-center justify-content-between p-3 gap-3">
+            <div class="flex-grow-1 w-100" style="max-width: 600px;">
                 <h4 class="fw-bold mb-3">Buscar Préstamo</h4>
                 <input type="text" id="searchInput" class="form-control border-0 shadow-sm" 
                     placeholder="Buscar por cliente, libro o estado..." 
                     style="background-color: #e8c5c5; border-radius: 15px; padding: 12px 20px; font-size: 15px;">
             </div>
-            <div class="text-center">
+            <div class="text-center d-none d-md-block">
                 <img src="/img/Prestamos.png" alt="Préstamos" style="width: 120px; height: auto;">
             </div>
         </div>
@@ -33,8 +33,8 @@
             <table class="table table-hover align-middle mb-0" id="prestamosTable" style="background-color: #faf5f5;">
                 <thead style="background-color: #f0e5e5;">
                     <tr>
-                        <th class="fw-bold text-center py-3" style="color: #000000ff;">ID</th>
-                        <th class="fw-bold text-center py-3" style="color: #000000ff;">Cliente</th>
+                        <th class="fw-bold text-center py-3 d-none d-md-table-cell" style="color: #000000ff;">ID</th>
+                        <th class="fw-bold text-center py-3 d-none d-lg-table-cell" style="color: #000000ff;">Cliente</th>
                         <th class="fw-bold text-center py-3" style="color: #000000ff;">Libro</th>
                         <th class="fw-bold text-center py-3" style="color: #000000ff;">Estado</th>
                         <th class="fw-bold text-center py-3" style="color: #000000ff;">Acciones</th>
@@ -43,16 +43,19 @@
                 <tbody>
                     @forelse($prestamos as $prestamo)
                     <tr style="border-bottom: 1px solid #f0e5e5;">
-                        <td class="text-center py-3" style="color: #7F7A7A;">{{ $prestamo->id }}</td>
-                        <td class="text-center py-3" style="color: #7F7A7A;">{{ $prestamo->cliente->nombre ?? '' }} {{ $prestamo->cliente->apellido ?? '' }}</td>
-                        <td class="text-center py-3" style="color: #7F7A7A;">{{ $prestamo->libro->titulo ?? '' }}</td>
+                        <td class="text-center py-3 d-none d-md-table-cell" style="color: #7F7A7A;">{{ $prestamo->id }}</td>
+                        <td class="text-center py-3 d-none d-lg-table-cell" style="color: #7F7A7A;">{{ $prestamo->cliente->nombre ?? '' }} {{ $prestamo->cliente->apellido ?? '' }}</td>
+                        <td class="text-center py-3" style="color: #7F7A7A;">
+                            <div class="fw-semibold">{{ $prestamo->libro->titulo ?? '' }}</div>
+                            <small class="text-muted d-lg-none">{{ $prestamo->cliente->nombre ?? '' }} {{ $prestamo->cliente->apellido ?? '' }}</small>
+                        </td>
                         <td class="text-center py-3">
                             <span class="badge {{ $prestamo->estado === 'Prestado' ? 'bg-warning text-dark' : 'bg-success' }} px-3 py-2" style="border-radius: 10px;">
                                 {{ $prestamo->estado }}
                             </span>
                         </td>
                         <td class="text-center py-3">
-                            <div class="d-flex gap-2 justify-content-center">
+                            <div class="d-flex gap-2 justify-content-center flex-wrap">
                                 <!-- Botón Mostrar (Amarillo) -->
                                 <button class="btn btn-sm showBtn d-flex align-items-center justify-content-center" 
                                     style="width: 36px; height: 36px; background-color: #ffd700; border: none;"
@@ -293,9 +296,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            const cliente = row.cells[1].textContent.toLowerCase();
-            const libro = row.cells[2].textContent.toLowerCase();
-            const estado = row.cells[3].textContent.toLowerCase();
+            const cliente = row.cells[1]?.textContent.toLowerCase() || '';
+            const libro = row.cells[2]?.textContent.toLowerCase() || '';
+            const estado = row.cells[3]?.textContent.toLowerCase() || '';
 
             if (cliente.includes(filter) || libro.includes(filter) || estado.includes(filter)) {
                 row.style.display = '';

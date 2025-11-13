@@ -3,25 +3,25 @@
 @section('title', 'Usuarios')
 
 @section('content')
-<div class="container-fluid px-4 py-4">
+<div class="container-fluid px-3 px-md-4 py-4">
     <!-- Header con botón -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
         <h2 class="fw-bold mb-0">Usuarios</h2>
-        <button class="btn btn-secondary px-4" data-bs-toggle="modal" data-bs-target="#createModal" style="background: #A674C9">
+        <button class="btn btn-secondary px-3 py-2" data-bs-toggle="modal" data-bs-target="#createModal" style="background: #A674C9">
             <i class="bi bi-plus-circle me-2"></i>Agregar usuario
         </button>
     </div>
 
     <!-- Tarjeta de búsqueda -->
     <div class="card shadow-sm mb-4 border-0" style="background: linear-gradient(135deg, #f8e8e8 0%, #f3d4d4 100%); border-radius: 20px;">
-        <div class="card-body d-flex align-items-center justify-content-between flex-wrap p-3">
-            <div class="flex-grow-1 pe-3" style="max-width: 600px;">
+        <div class="card-body d-flex flex-column flex-md-row align-items-center justify-content-between p-3 gap-3">
+            <div class="flex-grow-1 w-100" style="max-width: 600px;">
                 <h4 class="fw-bold mb-3">Buscar Usuario</h4>
                 <input type="text" id="searchInput" class="form-control border-0 shadow-sm" 
                     placeholder="Buscar por nombre o correo..." 
                     style="background-color: #e8c5c5; border-radius: 15px; padding: 12px 20px; font-size: 15px;">
             </div>
-            <div class="text-center">
+            <div class="text-center d-none d-md-block">
                 <img src="/img/Usuarios.png" alt="Usuarios" style="width: 120px; height: auto;">
             </div>
         </div>
@@ -33,20 +33,23 @@
             <table class="table table-hover align-middle mb-0" id="usersTable" style="background-color: #faf5f5;">
                 <thead style="background-color: #f0e5e5;">
                     <tr>
-                        <th class="fw-bold text-center py-3" style="color: #000000ff;">ID</th>
+                        <th class="fw-bold text-center py-3 d-none d-md-table-cell" style="color: #000000ff;">ID</th>
                         <th class="fw-bold text-center py-3" style="color: #000000ff;">Nombre</th>
-                        <th class="fw-bold text-center py-3" style="color: #000000ff;">Correo</th>
+                        <th class="fw-bold text-center py-3 d-none d-lg-table-cell" style="color: #000000ff;">Correo</th>
                         <th class="fw-bold text-center py-3" style="color: #000000ff;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($users as $user)
                     <tr style="border-bottom: 1px solid #f0e5e5;">
-                        <td class="text-center py-3" style="color: #7F7A7A;">{{ $user->id }}</td>
-                        <td class="text-center py-3" style="color: #7F7A7A;">{{ $user->name }}</td>
-                        <td class="text-center py-3" style="color: #7F7A7A;">{{ $user->email }}</td>
+                        <td class="text-center py-3 d-none d-md-table-cell" style="color: #7F7A7A;">{{ $user->id }}</td>
+                        <td class="text-center py-3" style="color: #7F7A7A;">
+                            <div class="fw-semibold">{{ $user->name }}</div>
+                            <small class="text-muted d-lg-none">{{ $user->email }}</small>
+                        </td>
+                        <td class="text-center py-3 d-none d-lg-table-cell" style="color: #7F7A7A;">{{ $user->email }}</td>
                         <td class="text-center py-3">
-                            <div class="d-flex gap-2 justify-content-center">
+                            <div class="d-flex gap-2 justify-content-center flex-wrap">
                                 <!-- Botón Mostrar (Amarillo) -->
                                 <button class="btn btn-sm showBtn d-flex align-items-center justify-content-center" 
                                     style="width: 36px; height: 36px; background-color: #ffd700; border: none;"
@@ -220,10 +223,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const rows = document.querySelectorAll('#usersTable tbody tr');
 
         rows.forEach(row => {
-            const name = row.cells[1].textContent.toLowerCase();
-            const email = row.cells[2].textContent.toLowerCase();
+            const name = row.cells[1]?.textContent.toLowerCase() || '';
+            const emailCell = row.cells[2]?.textContent.toLowerCase() || '';
+            const emailSmall = row.querySelector('.text-muted')?.textContent.toLowerCase() || '';
 
-            if (name.includes(filter) || email.includes(filter)) {
+            if (name.includes(filter) || emailCell.includes(filter) || emailSmall.includes(filter)) {
                 row.style.display = '';
             } else {
                 row.style.display = 'none';
