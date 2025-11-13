@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Libro;
@@ -7,6 +8,9 @@ use Illuminate\Http\Request;
 
 class LibroController extends Controller
 {
+    /**
+     * Muestra la lista de libros junto a sus categorías.
+     */
     public function index()
     {
         $libros = Libro::with('categoria')->get();
@@ -14,44 +18,49 @@ class LibroController extends Controller
         return view('libros.index', compact('libros', 'categorias'));
     }
 
+    /**
+     * Guarda un nuevo libro en la base de datos.
+     */
     public function store(Request $request)
     {
         $request->validate([
-            'titulo' => 'required',
-            'categoria_id' => 'required|exists:categorias,id',
-            'idioma' => 'required',
-            'autor' => 'required',
-            'editorial' => 'required',
+            'titulo' => 'required|string|max:150',
+            'categoria_id' => 'required|integer|exists:categorias,id',
+            'idioma' => 'required|string|max:50',
+            'autor' => 'required|string|max:100',
+            'editorial' => 'required|string|max:100',
         ]);
 
-
-        Libro::create($request->all());
+        Libro::create($request->only(['titulo', 'categoria_id', 'idioma', 'autor', 'editorial']));
 
         return redirect()->back()->with('success', 'Libro agregado correctamente.');
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Actualiza un libro existente.
+     */
+    public function update(Request $request, Libro $libro)
     {
         $request->validate([
-            'titulo' => 'required',
-            'categoria_id' => 'required|exists:categorias,id',
-            'idioma' => 'required',
-            'autor' => 'required',
-            'editorial' => 'required',
+            'titulo' => 'required|string|max:150',
+            'categoria_id' => 'required|integer|exists:categorias,id',
+            'idioma' => 'required|string|max:50',
+            'autor' => 'required|string|max:100',
+            'editorial' => 'required|string|max:100',
         ]);
 
+        $libro->update($request->only(['titulo', 'categoria_id', 'idioma', 'autor', 'editorial']));
 
-        $libro = Libro::findOrFail($id);
-        $libro->update($request->all());
-
-        return redirect()->back()->with('success', 'Libro actualizado correctamente.');
+        return redirect()->back()->with('success', "El libro '{$libro->titulo}' fue actualizado correctamente.");
     }
 
-    public function destroy($id)
+    /**
+     * Elimina un libro del sistema.
+     */
+    public function destroy(Libro $libro)
     {
-        $libro = Libro::findOrFail($id);
         $libro->delete();
 
-        return redirect()->back()->with('success', 'Libro eliminado correctamente.');
+        return redirect()->back()->with('success', "El libro '{$libro->titulo}' fue eliminado correctamente.");
     }
 }

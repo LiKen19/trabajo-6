@@ -4,83 +4,62 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Exception;
 
 class ClienteController extends Controller
 {
-    /**
-     * Muestra la lista de clientes.
-     */
     public function index()
     {
-        $clientes = Cliente::all();
+        $clientes = Cliente::orderBy('nombre')->get();
         return view('clientes.index', compact('clientes'));
     }
 
-    /**
-     * Muestra el formulario para crear un nuevo cliente.
-     * (Si usas modal, esta función puede omitirse)
-     */
-    public function create()
-    {
-        return view('clientes.create'); // opcional si usas modal
-    }
-
-    /**
-     * Guarda un nuevo cliente.
-     */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nombre' => 'required|string|max:100',
             'apellido' => 'required|string|max:100',
-            'dni' => 'required|string|max:20',
+            'dni' => 'required|string|max:20|unique:clientes',
             'telefono' => 'required|string|max:20',
             'direccion' => 'required|string|max:255',
-            'correo' => 'required|email|max:255',
+            'correo' => 'required|email|max:255|unique:clientes',
         ]);
 
-        Cliente::create($request->all());
+        Cliente::create($validated);
 
-        return redirect()->route('cliente.index')->with('success', 'Cliente agregado correctamente.');
+        return redirect()->back()->with('success', 'Cliente agregado correctamente.');
     }
 
-    /**
-     * Muestra el formulario para editar un cliente.
-     */
-    public function edit($id)
+    public function edit(Cliente $cliente)
     {
-        $cliente = Cliente::findOrFail($id);
         return view('clientes.edit', compact('cliente'));
     }
 
-    /**
-     * Actualiza los datos de un cliente.
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request, Cliente $cliente)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nombre' => 'required|string|max:100',
             'apellido' => 'required|string|max:100',
-            'dni' => 'required|string|max:20',
+            'dni' => ['required', 'string', 'max:20', Rule::unique('clientes')->ignore($cliente->id)],
             'telefono' => 'required|string|max:20',
             'direccion' => 'required|string|max:255',
-            'correo' => 'required|email|max:255',
+            'correo' => ['required', 'email', 'max:255', Rule::unique('clientes')->ignore($cliente->id)],
         ]);
 
-        $cliente = Cliente::findOrFail($id);
-        $cliente->update($request->all());
+        $cliente->update($validated);
 
-        return redirect()->route('cliente.index')->with('success', 'Cliente actualizado correctamente.');
+        return redirect()->back()->with('success', 'Cliente actualizado correctamente.');
     }
 
-    /**
-     * Elimina un cliente.
-     */
-    public function destroy($id)
+    public function destroy(Cliente $cliente)
     {
-        $cliente = Cliente::findOrFail($id);
-        $cliente->delete();
-
-        return redirect()->route('cliente.index')->with('success', 'Cliente eliminado correctamente.');
+        try {
+            $cliente->delete();
+            return redirect()->route('cliente.index')->with('success', 'Cliente eliminado correctamente.');
+        } catch (Exception $e) {
+            return redirect()->route('cliente.index')->with('error', 'No se pudo eliminar el cliente.');
+        }
     }
 }
+
